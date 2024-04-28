@@ -6,17 +6,18 @@
 #include "CScore.h"
 #include "CShape.h"
 #include "CCollision.h"
+#include "CTransform.h"
 #include <string>
 
 
 class Entity {
 public:
-    std::shared_ptr<CInput> cinput;
+    std::shared_ptr<CInput>     cinput;
     std::shared_ptr<CCollision> collision;
     std::shared_ptr<CLifeSpan>  clifespan;
     std::shared_ptr<CShape>     cshape;
     std::shared_ptr<CScore>     cscore;
-
+    std::shared_ptr<CTransform> ctransform;
 
 
     void destroy();
