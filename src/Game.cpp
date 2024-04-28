@@ -1,9 +1,4 @@
 #include "Game.h"
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/VideoMode.hpp>
-#include <SFML/Window/WindowStyle.hpp>
 
 Game::Game() {
     m_running = true;
@@ -21,6 +16,10 @@ void Game::Run() {
         sUpdate();
         sRender();
     }
+}
+
+void Game::spwanPlayer() {
+    
 }
 
 void Game::sInit() {
@@ -55,7 +54,7 @@ void Game::sInput() {
             }
 
             if(e.key.code == sf::Keyboard::A) {
-                m_window.clear(sf::Color(0xFF,0x00,0x00));
+                m_window.clear(sf::Color(0x00,0x00,0x00));
             }
             break;
         default:
