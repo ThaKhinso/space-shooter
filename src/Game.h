@@ -10,6 +10,9 @@ public:
     void sUpdate();
     void Run();
     void sInit();
+    void spwanPlayer();
+    void spwanBullet();
+    void spwanEnemies();
 
 private:
     bool m_running;

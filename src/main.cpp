@@ -2,7 +2,6 @@
 
 
 int main() {
-    Game* game = new Game();
+    std::shared_ptr<Game> game = std::make_shared<Game>();
     game->Run();
-    delete game;
 }
