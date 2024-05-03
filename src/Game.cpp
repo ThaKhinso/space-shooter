@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include <fcntl.h>
 Game::Game() {
     m_running = true;
     if(! m_window_texture.loadFromFile("assets/pics/galaxy.jpg")) {
