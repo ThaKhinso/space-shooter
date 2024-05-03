@@ -1,6 +1,6 @@
 #include "Common.h"
-#include <SFML/Graphics/RenderWindow.hpp>
-
+#include "imgui.h"
+#include "imgui-SFML.h"
 class Game{
 public:
     Game();
@@ -16,6 +16,9 @@ public:
 
 private:
     bool m_running;
+    char buf[250] = {0};
+    float f;
+    sf::Clock deltaclock;
     sf::RenderWindow m_window;
     sf::Texture m_window_texture;
     sf::Sprite m_window_sprite;
