@@ -9,10 +9,3 @@ public:
     ~CCollision();
 };
 
-CCollision::CCollision(/* args */)
-{
-}
-
-CCollision::~CCollision()
-{
-}
