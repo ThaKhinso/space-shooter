@@ -1,6 +1,13 @@
 #include "Game.h"
+#include "CCollision.h"
+#include "CInput.h"
+#include "CLifeSpan.h"
+#include "CShape.h"
+#include "CTransform.h"
+#include "Vec2.h"
 #include "imgui-SFML.h"
 #include <SFML/System/Clock.hpp>
+#include <memory>
 
 Game::Game() {
     m_running = true;
@@ -24,6 +31,13 @@ void Game::Run() {
 }
 
 void Game::spwanPlayer() {
+    auto player = m_entities.addEntity("player");
+    Vec2 middleWindowPos{ m_window.getSize().x * 0.5, m_window.getSize().y * 0.5 };
+    player->ctransform = std::make_shared<CTransform>(middleWindowPos, Vec2(0,0));
+    player->cshape = std::make_shared<CShape>("assets/pics/player.png");
+    player->collision = std::make_shared<CCollision>(Vec2(player->cshape->sprite.getPosition().x,player->cshape->sprite.getPosition().y),Vec2(40,50));
+    player->cinput = std::make_shared<CInput>();
+    player->clifespan = std::make_shared<CLifeSpan>();
     
 }
 
