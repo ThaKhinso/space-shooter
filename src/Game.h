@@ -1,7 +1,9 @@
 #include "Common.h"
+#include "Entity.h"
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "EntityManager.h"
+#include <memory>
 class Game{
 public:
     Game();
@@ -11,6 +13,7 @@ public:
     void sUpdate();
     void Run();
     void sInit();
+    void sCollisoin();
     void spwanPlayer();
     void spwanBullet();
     void spwanEnemies();
@@ -25,5 +28,7 @@ private:
     sf::RenderWindow m_window;
     sf::Texture m_window_texture;
     sf::Sprite m_window_sprite;
+    std::shared_ptr<Entity> m_player;
     double speed;
+    float velx, vely;
 };
