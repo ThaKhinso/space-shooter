@@ -15,4 +15,5 @@ public:
         }
         sprite.setTexture(texture);
     };
+    ~CShape(){};
 };

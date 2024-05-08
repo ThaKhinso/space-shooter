@@ -36,11 +36,13 @@ void Game::Run() {
 void Game::spwanPlayer() {
     auto player = m_entities.addEntity("player");
     Vec2 middleWindowPos{ m_window.getSize().x * 0.5, m_window.getSize().y * 0.5 };
-    player->ctransform = std::make_shared<CTransform>(middleWindowPos, Vec2(0,0));
+    Vec2 speed(10,10);
+    Vec2 spritepos(player->cshape->sprite.getPosition().x, player->cshape->sprite.getPosition().y);
+    player->ctransform = std::make_shared<CTransform>(middleWindowPos, speed);
     player->cshape = std::make_shared<CShape>("assets/pics/player.png");
-    player->collision = std::make_shared<CCollision>(Vec2(player->cshape->sprite.getPosition().x,player->cshape->sprite.getPosition().y),Vec2(velx,vely));
+    player->collision = std::make_shared<CCollision>(spritepos,speed);
     player->cinput = std::make_shared<CInput>();
-    player->clifespan = std::make_shared<CLifeSpan>();
+    player->clifespan = std::make_shared<CLifeSpan>(1);
     m_player = player;
 }
 
@@ -55,7 +57,21 @@ void Game::sUpdate() {
 }
 
 void Game::sMovement() {
+    if (m_player->cinput->left == true) {
+        m_player->ctransform->pos.x += m_player->ctransform->velocity.x;
+    }
 
+    if (m_player->cinput->right == true) {
+        m_player->ctransform->pos.x -= m_player->ctransform->velocity.x;
+    }
+
+    if (m_player->cinput->up == true) {
+        m_player->ctransform->pos.y -= m_player->ctransform->velocity.y;
+    }
+    
+    if (m_player->cinput->down == true) {
+        m_player->ctransform->pos.y += m_player->ctransform->velocity.y;
+    }
 }
 
 void Game::sRender() {
@@ -73,6 +89,11 @@ void Game::sRender() {
     ImGui::SliderFloat("speed for x axis", &vely, 0.0f, 30.f);
     m_window.clear();
     m_window.draw(m_window_sprite);
+    for (auto e : m_entities.getEntities())
+	{
+		e->cshape->sprite.setPosition(e->ctransform->pos.x, e->ctransform->pos.y);
+		m_window.draw(e->cshape->sprite);
+	}
     ImGui::SFML::Render(m_window);
     m_window.display();
 }
@@ -115,25 +136,25 @@ void Game::sInput() {
 }
 
 void Game::sCollisoin() {
-    for (auto e : m_entities.getEntities("player"))
-	{
-		//Checks to see if player collided with walls
-		if (e->ctransform->pos.x + m_playerConfig.CR > m_window.getSize().x)
-		{
-			e->cTransform->pos.x -= m_playerConfig.S;
-		}
-		else if (e->cTransform->pos.x - m_playerConfig.CR < 0)
-		{
-			e->cTransform->pos.x += m_playerConfig.S;
-		}
+    // for (auto e : m_entities.getEntities("player"))
+	// {
+	// 	//Checks to see if player collided with walls
+	// 	if (e->ctransform->pos.x + m_playerConfig.CR > m_window.getSize().x)
+	// 	{
+	// 		e->cTransform->pos.x -= m_playerConfig.S;
+	// 	}
+	// 	else if (e->cTransform->pos.x - m_playerConfig.CR < 0)
+	// 	{
+	// 		e->cTransform->pos.x += m_playerConfig.S;
+	// 	}
 
-		if (e->cTransform->pos.y + m_playerConfig.CR > m_window.getSize().y)
-		{
-			e->cTransform->pos.y -= m_playerConfig.S;
-		}
-		else if (e->cTransform->pos.y - m_playerConfig.CR < 0)
-		{
-			e->cTransform->pos.y += m_playerConfig.S;
-		}
-	}
+	// 	if (e->cTransform->pos.y + m_playerConfig.CR > m_window.getSize().y)
+	// 	{
+	// 		e->cTransform->pos.y -= m_playerConfig.S;
+	// 	}
+	// 	else if (e->cTransform->pos.y - m_playerConfig.CR < 0)
+	// 	{
+	// 		e->cTransform->pos.y += m_playerConfig.S;
+	// 	}
+	// }
 }

@@ -1,4 +1,5 @@
 #include "Vec2.h"
+#include <cmath>
 
 Vec2::Vec2() {
 
@@ -71,4 +72,8 @@ Vec2 Vec2::normalize(Vec2 vector) {
 
 double Vec2::length(){
     return std::sqrt( x * x + y * y);
+}
+
+Vec2::~Vec2() {
+    
 }

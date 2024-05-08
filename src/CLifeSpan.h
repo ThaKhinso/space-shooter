@@ -6,4 +6,5 @@ public:
     CLifeSpan(int total) : remaining(total){
 
     }
+    ~CLifeSpan(){};
 };
