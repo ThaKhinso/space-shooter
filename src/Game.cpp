@@ -2,7 +2,7 @@
 #include "imgui-SFML.h"
 #include <SFML/System/Clock.hpp>
 
-Game::Game() {
+Game::Game(): f{0} {
     m_running = true;
     if(! m_window_texture.loadFromFile("assets/pics/galaxy.jpg")) {
         std::cerr << "m window texture loading failed\n";
