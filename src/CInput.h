@@ -10,6 +10,9 @@ enum Keys {
 
 class CInput {
 public:
+    CInput() {
+        
+    };
     bool up = false;
     bool down = false;
     bool left = false;

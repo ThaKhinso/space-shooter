@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Vec2.h"
 class CCollision
 {
 private:
-    /* data */
+    Vec2 position, size;
 public:
-    CCollision(/* args */);
-    ~CCollision();
+    CCollision(Vec2& pos, Vec2& size)
+        :position(pos), size(size){};
+    ~CCollision(){};
 };
 

@@ -1,8 +1,18 @@
 #include "Game.h"
+#include "CCollision.h"
+#include "CInput.h"
+#include "CLifeSpan.h"
+#include "CShape.h"
+#include "CTransform.h"
+#include "Vec2.h"
 #include "imgui-SFML.h"
+#include "imgui.h"
 #include <SFML/System/Clock.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <memory>
 
-Game::Game() {
+Game::Game()
+    :f(0), velx(0), vely(0) {
     m_running = true;
     if(! m_window_texture.loadFromFile("assets/pics/galaxy.jpg")) {
         std::cerr << "m window texture loading failed\n";
@@ -24,7 +34,16 @@ void Game::Run() {
 }
 
 void Game::spwanPlayer() {
-    
+    auto player = m_entities.addEntity("player");
+    Vec2 middleWindowPos{ m_window.getSize().x * 0.5, m_window.getSize().y * 0.5 };
+    Vec2 speed(10,10);
+    Vec2 spritepos(player->cshape->sprite.getPosition().x, player->cshape->sprite.getPosition().y);
+    player->ctransform = std::make_shared<CTransform>(middleWindowPos, speed);
+    player->cshape = std::make_shared<CShape>("assets/pics/player.png");
+    player->collision = std::make_shared<CCollision>(spritepos,speed);
+    player->cinput = std::make_shared<CInput>();
+    player->clifespan = std::make_shared<CLifeSpan>(1);
+    m_player = player;
 }
 
 void Game::sInit() {
@@ -38,7 +57,21 @@ void Game::sUpdate() {
 }
 
 void Game::sMovement() {
+    if (m_player->cinput->left == true) {
+        m_player->ctransform->pos.x += m_player->ctransform->velocity.x;
+    }
 
+    if (m_player->cinput->right == true) {
+        m_player->ctransform->pos.x -= m_player->ctransform->velocity.x;
+    }
+
+    if (m_player->cinput->up == true) {
+        m_player->ctransform->pos.y -= m_player->ctransform->velocity.y;
+    }
+    
+    if (m_player->cinput->down == true) {
+        m_player->ctransform->pos.y += m_player->ctransform->velocity.y;
+    }
 }
 
 void Game::sRender() {
@@ -46,14 +79,21 @@ void Game::sRender() {
     
     ImGui::Text("Hello, world %d", 123);
     if (ImGui::Button("Save")){
-        printf("nigga\n");
+        
         printf("String value: %s\n",buf);
         printf("Float value: %f\n",f);
     }
     ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+    ImGui::SliderFloat("speed for x axis", &velx, 0.0f, 30.f);
+    ImGui::SliderFloat("speed for x axis", &vely, 0.0f, 30.f);
     m_window.clear();
     m_window.draw(m_window_sprite);
+    for (auto e : m_entities.getEntities())
+	{
+		e->cshape->sprite.setPosition(e->ctransform->pos.x, e->ctransform->pos.y);
+		m_window.draw(e->cshape->sprite);
+	}
     ImGui::SFML::Render(m_window);
     m_window.display();
 }
@@ -71,13 +111,50 @@ void Game::sInput() {
                 m_running = false;
             }
 
-            if(e.key.code == sf::Keyboard::A) {
-                m_window.clear(sf::Color(0x00,0x00,0x00));
+            if(e.key.code == sf::Keyboard::W || e.key.code == sf::Keyboard::Up) {
+                m_player->cinput->up = true;
             }
+
+            if(e.key.code == sf::Keyboard::S || e.key.code == sf::Keyboard::Down) {
+                m_player->cinput->down = true;
+            }
+
+            if(e.key.code == sf::Keyboard::A || e.key.code == sf::Keyboard::Left) {
+                m_player->cinput->left = true;
+            }
+
+            if(e.key.code == sf::Keyboard::D || e.key.code == sf::Keyboard::Right) {
+                m_player->cinput->right = true;
+            }
+
             break;
         default:
             break;
         }
     }
     ImGui::SFML::Update(m_window,deltaclock.restart());
+}
+
+void Game::sCollisoin() {
+    // for (auto e : m_entities.getEntities("player"))
+	// {
+	// 	//Checks to see if player collided with walls
+	// 	if (e->ctransform->pos.x + m_playerConfig.CR > m_window.getSize().x)
+	// 	{
+	// 		e->cTransform->pos.x -= m_playerConfig.S;
+	// 	}
+	// 	else if (e->cTransform->pos.x - m_playerConfig.CR < 0)
+	// 	{
+	// 		e->cTransform->pos.x += m_playerConfig.S;
+	// 	}
+
+	// 	if (e->cTransform->pos.y + m_playerConfig.CR > m_window.getSize().y)
+	// 	{
+	// 		e->cTransform->pos.y -= m_playerConfig.S;
+	// 	}
+	// 	else if (e->cTransform->pos.y - m_playerConfig.CR < 0)
+	// 	{
+	// 		e->cTransform->pos.y += m_playerConfig.S;
+	// 	}
+	// }
 }

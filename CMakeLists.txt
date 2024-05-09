@@ -13,6 +13,7 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(spaceshooter src/main.cpp
                             src/Game.cpp
+                            src/
                             src/Entity.cpp 
                             src/EntityManager.cpp
                             src/imgui.cpp 
@@ -21,6 +22,8 @@ add_executable(spaceshooter src/main.cpp
                             src/imgui_draw.cpp 
                             src/imgui_demo.cpp 
                             src/imgui-SFML.cpp
+                            src/Vec2.cpp 
+
                             )
 target_link_libraries(spaceshooter PRIVATE sfml-graphics)
 target_compile_features(spaceshooter PRIVATE cxx_std_17)
