@@ -29,6 +29,6 @@ private:
     sf::Texture m_window_texture;
     sf::Sprite m_window_sprite;
     std::shared_ptr<Entity> m_player;
-    double speed;
+    float speed;
     float velx, vely;
 };
