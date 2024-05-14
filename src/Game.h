@@ -17,6 +17,7 @@ public:
     void spwanPlayer();
     void spwanBullet();
     void spwanEnemies();
+    void sSpwan();
 
 private:
     bool m_running;
