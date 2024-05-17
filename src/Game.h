@@ -15,7 +15,7 @@ public:
     void sInit();
     void sCollisoin();
     void spwanPlayer();
-    void spwanBullet();
+    void spwanBullet(Vec2& pos);
     void spwanEnemies();
     void sSpwan();
 
@@ -23,7 +23,8 @@ private:
     bool m_running;
     char buf[250] = {0};
     float f;
-
+    bool spwan;
+    
     EntityManager m_entities;
     sf::Clock deltaclock;
     sf::RenderWindow m_window;
