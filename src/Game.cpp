@@ -112,7 +112,8 @@ void Game::sMovement() {
 
 void Game::sRender() {
     // ImGui::SFML::Update(m_window, deltaclock.restart());
-    
+    m_window.clear();
+    ImGui::Begin("Nigga");
     ImGui::Text("Hello, world %d", 123);
     if (ImGui::Button("Save")){
         
@@ -122,7 +123,17 @@ void Game::sRender() {
     ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
     ImGui::SliderFloat("speed", &speed, 0.0f, 150.f);
-    m_window.clear();
+    ImGui::End();
+    ImGui::BeginPopup("Nigga");
+    ImGui::EndPopup();
+    if (ImGui::BeginPopup("New Window")) {
+        ImGui::Text("This is a new window!");
+        if (ImGui::Button("Close")) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+    
     m_window.draw(m_window_sprite);
     /*for (auto e : m_entities.getEntities())
         {
