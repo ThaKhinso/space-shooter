@@ -26,6 +26,7 @@ Game::Game()
 
 void Game::Run() {
         sInit();
+        spwanEnemies();
     // sf::Clock deltaclock;
     while(m_running) {
         m_entities.update();
@@ -81,22 +82,22 @@ void Game::sUpdate() {
 void Game::sMovement() {
     Vec2 playervelocity{ 0,0 };
     if (m_player->cinput->left == true) {
-        std::cout << "left\n";
+        //std::cout << "left\n";
         playervelocity.x -= speed;
     }
 
     if (m_player->cinput->right == true) {
-        std::cout << "right\n";
+        //std::cout << "right\n";
         playervelocity.x += speed;
     }
 
     if (m_player->cinput->up == true) {
-        std::cout << "up\n";
+        //std::cout << "up\n";
         playervelocity.y -= speed;
     }
     
     if (m_player->cinput->down == true) {
-        std::cout << "down\n";
+        //std::cout << "down\n";
         playervelocity.y += speed;
     }
     //std::cout << m_player->tag() << std::endl;
@@ -117,6 +118,9 @@ void Game::sMovement() {
         }
         if (e->tag() == "Bullet") {
             e->ctransform->pos.y -= 10;
+        }
+        if (e->tag() == "Enemy") {
+            e->ctransform->pos.y += 0.5;
         }
         /*if (strcmp("nigga", "nigga") == 0) {
             std::cout << "string compare success\n";
@@ -143,7 +147,8 @@ void Game::sMovement() {
 
 void Game::sRender() {
     // ImGui::SFML::Update(m_window, deltaclock.restart());
-    
+    m_window.clear();
+    ImGui::Begin("Nigga");
     ImGui::Text("Hello, world %d", 123);
     if (ImGui::Button("Save")){
         
@@ -153,7 +158,17 @@ void Game::sRender() {
     ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
     ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
     ImGui::SliderFloat("speed", &speed, 0.0f, 150.f);
-    m_window.clear();
+    ImGui::End();
+    ImGui::BeginPopup("Nigga");
+    ImGui::EndPopup();
+    if (ImGui::BeginPopup("New Window")) {
+        ImGui::Text("This is a new window!");
+        if (ImGui::Button("Close")) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+    
     m_window.draw(m_window_sprite);
     int bullet_amount;
     for (auto e : m_entities.getEntities())
@@ -164,7 +179,7 @@ void Game::sRender() {
             bullet_amount++;
         }
     }
-    std::cout << "amount of bullets: " << bullet_amount << "\n";
+    //std::cout << "amount of bullets: " << bullet_amount << "\n";
     // std::cout << m_player->ctransform->pos.x << " " << m_player->ctransform->pos.y << std::endl;
     // m_player->cshape->sprite.setPosition(m_player->ctransform->pos.x, m_player->ctransform->pos.y);
     // m_window.draw(m_player->cshape->sprite);
@@ -262,10 +277,28 @@ void Game::sCollisoin() {
             }
         }
     }
+    for (auto& e : m_entities.getEntities("Enemy")) {
+        for (auto& b : m_entities.getEntities("Bullet")) {
+            std::cout << "Pre\n";
+            std::cout << "enemy: " << e->ctransform->pos.y + e->cshape->sprite.getLocalBounds().height << "\n";
+            std::cout << "BUllet: " << b->ctransform->pos.y << "\n";
+            if (b->ctransform->pos.y == e->ctransform->pos.y + e->cshape->sprite.getLocalBounds().height)
+            {
+                std::cout << "After\n";
+                std::cout << "enemy: " << e->ctransform->pos.y + e->cshape->sprite.getLocalBounds().height << "\n";
+                std::cout << "BUllet: " << b->ctransform->pos.y << "\n";
+                e->destroy();
+                b->destroy();
+            }
+        }
+        if (e->ctransform->pos.y > m_window.getSize().y) {
+            e->destroy();
+        }
+    }
 }
 
 void Game::spwanBullet(Vec2& pos) {
-    std::cout << "spwanned bullet\n";
+    //std::cout << "spwanned bullet\n";
     Vec2 speed{ 10, 10 };
     auto bullet = m_entities.addEntity("Bullet");
     bullet->cshape = std::make_shared<CShape>("assets/pics/bullet.png");
@@ -273,4 +306,14 @@ void Game::spwanBullet(Vec2& pos) {
     bullet->ctransform = std::make_shared<CTransform>(pos,speed);
     Vec2 size{ bullet->cshape->sprite.getLocalBounds().width, bullet->cshape->sprite.getLocalBounds().height};
     bullet->collision = std::make_shared<CCollision>(pos,size);
+}
+
+void Game::spwanEnemies() {
+    Vec2 speed{ 10, 10 };
+    auto enemy = m_entities.addEntity("Enemy");
+    Vec2 pos{ 0, -100 };
+    enemy->cshape = std::make_shared<CShape>("assets/pics/enemy.png");
+    enemy->ctransform = std::make_shared<CTransform>(pos, speed);
+    Vec2 size{ enemy->cshape->sprite.getLocalBounds().width, enemy->cshape->sprite.getLocalBounds().height };
+    enemy->collision = std::make_shared<CCollision>(pos, size);
 }
